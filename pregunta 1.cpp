@@ -24,7 +24,7 @@
 using namespace std;
 
 int *mejor_path;
-int mejor_tamaño = -1;
+int mejor_mi_size = -1;
 int mejor_index;
 
 class Ruta
@@ -84,20 +84,20 @@ void Grafo::Mejor_Ruta_Util(int u, int d, bool visitado[], int path[], int& path
 	visitado[u] = true;
 	path[path_index] = u;
 	path_index++;
-	int tamaño;
+	int mi_size;
 
 	if (u == d)
 	{
-		tamaño = 0;
+		mi_size = 0;
 		for (int i = 1; i < path_index; i++)
 		{
-			tamaño += peso[i];
+			mi_size += peso[i];
 			//cout << peso[i] << " ";
 		}
 
-		if (mejor_tamaño > tamaño || mejor_tamaño < 0)
+		if (mejor_mi_size > mi_size || mejor_mi_size < 0)
 		{
-			mejor_tamaño = tamaño;
+			mejor_mi_size = mi_size;
 			mejor_index = path_index;
 			mejor_path = new int[path_index];
 			for (int i = 0; i < path_index; i++)
@@ -113,7 +113,7 @@ void Grafo::Mejor_Ruta_Util(int u, int d, bool visitado[], int path[], int& path
 
 		cout << endl;
 
-		cout << "Peso: " << tamaño << endl;
+		cout << "Peso: " << mi_size << endl;
 		cout << endl;
 	}
 	else
@@ -166,7 +166,7 @@ int main()
 	for (int i = 0; i < mejor_index; i++)
 				cout << mejor_path[i] << " ";
 	cout << endl;
-	cout << "Mejor peso: " << mejor_tamaño << endl << endl;
+	cout << "Mejor peso: " << mejor_mi_size << endl << endl;
 
 	return 0;
 }

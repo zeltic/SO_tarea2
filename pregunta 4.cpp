@@ -46,7 +46,7 @@
 using namespace std;
 
 int *mejor_path; // Un arreglo que contiene todos los nodos de la mejor ruta
-int mejor_tamaño = -1;
+int mejor_mi_size = -1;
 int mejor_index;
 
 atomic<int> ready_flag = 0; // Si es 1 los threads se detendran
@@ -121,21 +121,21 @@ void Grafo::Recorre_Util(int u, int d, int path[], int& path_index, int peso[], 
 { // El nodo actual es u, el nodo anterior es a
     path[path_index] = u;
 	path_index++; // Incremento por cuantos nodos e pasado
-	int tamaño; // Tamaño es el peso total de todas las rutas
+	int mi_size; // Tamaño es el peso total de todas las rutas
     if(u == d) // Para cuando llegue al destino
     {
-        tamaño = 0;
+        mi_size = 0;
 		for (int i = 1; i < path_index; i++)
 		{
-			tamaño += peso[i]; // Tamaño tomara la suma del peso de todas las rutas
+			mi_size += peso[i]; // Tamaño tomara la suma del peso de todas las rutas
 		}
 
-        if (mejor_tamaño > tamaño || mejor_tamaño < 0) // Si tengo una ruta mejor entrare a la zona critica, si no entonces sigo de largo
+        if (mejor_mi_size > mi_size || mejor_mi_size < 0) // Si tengo una ruta mejor entrare a la zona critica, si no entonces sigo de largo
 		{
             g_mejor.lock(); // Para hacer cambios al mejor entro a la zona critica
-            if (mejor_tamaño > tamaño || mejor_tamaño < 0) // Vuelvo a correr el if para acegurar de que en lo que me demore en entrar a la zona critica otro thread no halla cambiado por un valor mejor
+            if (mejor_mi_size > mi_size || mejor_mi_size < 0) // Vuelvo a correr el if para acegurar de que en lo que me demore en entrar a la zona critica otro thread no halla cambiado por un valor mejor
             {
-                mejor_tamaño = tamaño;
+                mejor_mi_size = mi_size;
                 mejor_index = path_index;
                 mejor_path = new int[path_index];
                 for (int i = 0; i < path_index; i++)
@@ -146,7 +146,7 @@ void Grafo::Recorre_Util(int u, int d, int path[], int& path_index, int peso[], 
                 for (int i = 0; i < mejor_index; i++)
                             cout << mejor_path[i] << " ";
                 cout << endl;
-                cout << "Mejor peso: " << mejor_tamaño << endl;
+                cout << "Mejor peso: " << mejor_mi_size << endl;
             }
             g_mejor.unlock(); // Salgo de la zona critica
 		}
@@ -277,7 +277,7 @@ int main()
 	for (int i = 0; i < mejor_index; i++)
 				cout << mejor_path[i] << " ";
 	cout << endl;
-	cout << "Mejor peso: " << mejor_tamaño << endl;
+	cout << "Mejor peso: " << mejor_mi_size << endl;
 
 	return 0;
 }

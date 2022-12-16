@@ -41,7 +41,7 @@
 using namespace std;
 
 int *mejor_path;
-int mejor_tamaño = -1;
+int mejor_mi_size = -1;
 int mejor_index;
 atomic<int> ready_flag = 0;
 mutex g_mejor;
@@ -99,22 +99,22 @@ void Grafo::Recorre_Util(int u, int d, int path[], int& path_index, int peso[])
     path[path_index] = u;
 	path_index++;
     //cout << "Index: " << path_index << endl;
-	int tamaño;
+	int mi_size;
     if(u == d)
     {
-        tamaño = 0;
+        mi_size = 0;
 		for (int i = 1; i < path_index; i++)
 		{
-			tamaño += peso[i];
+			mi_size += peso[i];
 		}
-        //cout << tamaño << endl;
+        //cout << mi_size << endl;
 
-        if (mejor_tamaño > tamaño || mejor_tamaño < 0)
+        if (mejor_mi_size > mi_size || mejor_mi_size < 0)
 		{
             g_mejor.lock();
-            if (mejor_tamaño > tamaño || mejor_tamaño < 0)
+            if (mejor_mi_size > mi_size || mejor_mi_size < 0)
             {
-                mejor_tamaño = tamaño;
+                mejor_mi_size = mi_size;
                 mejor_index = path_index;
                 mejor_path = new int[path_index];
                 for (int i = 0; i < path_index; i++)
@@ -125,7 +125,7 @@ void Grafo::Recorre_Util(int u, int d, int path[], int& path_index, int peso[])
                 for (int i = 0; i < mejor_index; i++)
                             cout << mejor_path[i] << " ";
                 cout << endl;
-                cout << "Mejor peso: " << mejor_tamaño << endl;
+                cout << "Mejor peso: " << mejor_mi_size << endl;
             }
             g_mejor.unlock();
 		}
@@ -233,7 +233,7 @@ int main()
 	for (int i = 0; i < mejor_index; i++)
 				cout << mejor_path[i] << " ";
 	cout << endl;
-	cout << "Mejor peso: " << mejor_tamaño << endl;
+	cout << "Mejor peso: " << mejor_mi_size << endl;
 
 	return 0;
 }
